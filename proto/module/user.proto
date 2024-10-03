@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+option go_package = "savvy_life/proto/module";
+
+package module;
+
+message User {
+  // @inject_tag: json:"id" xorm:"pk autoincr"
+  int32 id = 1[json_name="id"];
+  // @inject_tag: json:"uuid" xorm:"VARCHAR(64) NOT NULL DEFAULT '' comment('用户唯一标识')"
+  string uuid = 2[json_name="uuid"];
+  // @inject_tag: json:"email" xorm:"VARCHAR(256) NOT NULL DEFAULT '' comment('用户邮箱')"
+  string email = 3[json_name="email"];
+  // @inject_tag: json:"phone_number" xorm:"VARCHAR(32) NOT NULL DEFAULT '' comment('用户手机号')"
+  string phone_number = 4[json_name="phone_number"];
+  // @inject_tag: json:"nice_name" xorm:"VARCHAR(64) NOT NULL DEFAULT '' comment('用户别名')"
+  string nice_name = 5[json_name="nice_name"];
+  // @inject_tag: json:"password" xorm:"VARCHAR(256) NOT NULL DEFAULT '' comment('加密后用户密码')"
+  string password = 6[json_name="password"];
+  // @inject_tag: json:"sign_up_time" xorm:"TIMESTAMP NOT NULL DEFAULT '1970-01-01 08:00:01' comment('签名时间')"
+  string sign_up_time = 7[json_name="sign_up_time"];
+  // @inject_tag: json:"create_time" xorm:"TIMESTAMP notnull created comment('记录创建时间')"
+  string create_time = 8[json_name="create_time"];
+  // @inject_tag: json:"update_time" xorm:"TIMESTAMP notnull updated comment('记录变更时间')"
+  string update_time = 9[json_name="update_time"];
+}

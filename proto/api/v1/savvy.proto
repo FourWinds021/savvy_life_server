@@ -1,0 +1,114 @@
+syntax = "proto3";
+
+option go_package = "savvy_life/proto/api/v1";
+
+package savvy_life.proto.api.v1;
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "validate/validate.proto";
+import "module/user.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "SavvyLife后端系统";
+    version: "1.0";
+    license: {
+      name: "MIT";
+    };
+  };
+  schemes: HTTP;
+  consumes: "application/json";
+  produces: "application/json";
+};
+
+service User {
+  // 获取用户信息
+  rpc GetUser (GetUserReq) returns (GetUserResp) {
+    option (google.api.http) = {
+      get: "/v1/user"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      parameters: {
+        headers: [
+          {
+            name: "X-User-Id"
+            description: "user id"
+            type: INTEGER
+            required: true
+          },
+          {
+            name: "X-Token"
+            description: "token"
+            type: STRING
+            required: true
+          }
+        ]
+      }
+    };
+  };
+}
+
+message BaseResp {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "默认返回"
+      description: "默认返回参数类型: BaseResp"
+    }
+  };
+
+  // @inject_tag: json:"code"
+  int32 code = 1[json_name="code",
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "返回码"}];
+
+  // @inject_tag: json:"message"
+  string message = 2[json_name="message",
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "返回信息"}];
+}
+
+message GetUserReq {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: " 获取用户信息请求"
+      description: "获取用户信息请求类型: GetUserReq"
+      required: ["uuid"]
+    }
+  };
+
+  // @inject_tag: json:"uuid"
+  optional string uuid = 1[
+    (validate.rules).any.required = true,
+    (validate.rules).string = {min_len: 1, max_len: 64},
+    json_name="uuid",
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "用户唯一标识, 字符串长度限制1~64"}];
+}
+
+message GetUserResp {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "获取用户信息返回"
+      description: "获取用户信息参数类型: GetUserResp"
+    }
+  };
+
+  // @inject_tag: json:"code"
+  int32 code = 1[
+    json_name="code",
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "接口返回码"}];
+
+  // @inject_tag: json:"message"
+  string message = 2[
+    json_name="message",
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "接口返回信息"}];
+
+  // @inject_tag: json:"user"
+  module.User user = 3[
+    json_name="user",
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "用户信息"}];
+}
